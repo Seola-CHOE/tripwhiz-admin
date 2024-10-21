@@ -1,5 +1,5 @@
 import { useRoutes } from 'react-router-dom';
-import router from 'src/router';
+import router from 'src/routers/router';
 
 import AdapterDateFns from '@mui/lab/AdapterDateFns';
 import LocalizationProvider from '@mui/lab/LocalizationProvider';
