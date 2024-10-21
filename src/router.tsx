@@ -37,6 +37,11 @@ const UserSettings = Loader(
   lazy(() => import('src/content/applications/Users/settings'))
 );
 
+//QnA
+const QnAList = Loader(
+  lazy(() => import('src/qna/components/list'))
+);
+
 // Components
 
 const Buttons = Loader(
@@ -169,6 +174,24 @@ const routes: RouteObject[] = [
       }
     ]
   },
+
+  //Q&A
+  {
+    path: '/qna',
+    element: <SidebarLayout />,
+    children: [
+      {
+        path: '',
+        element: <Navigate to="list" replace />
+      },
+      {
+        path: 'list',
+        element: <QnAList />
+      }
+    ]
+  },
+
+
   {
     path: '/components',
     element: <SidebarLayout />,
