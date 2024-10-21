@@ -1,8 +1,9 @@
+import FaqListComponent from '../components/FaqListComponent';
 
 
 function FaqListPage() {
   return (
-    <div></div>
+    <FaqListComponent/>
   );
 }
 
