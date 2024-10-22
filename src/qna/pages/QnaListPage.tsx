@@ -1,11 +1,19 @@
 import QnaListComponent from '../components/QnaListComponent';
+import PageHeader from '../components/list/PageHeader';
+import PageTitleWrapper from '../../components/PageTitleWrapper';
+
 
 function QnaListPage() {
 
+
   return (
-    <div>
+    <>
+      <PageTitleWrapper>
+        <PageHeader />
+      </PageTitleWrapper>
+
       <QnaListComponent/>
-    </div>
+    </>
   );
 }
 
