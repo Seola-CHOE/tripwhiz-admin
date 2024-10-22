@@ -20,7 +20,7 @@ const UseQuestion = (qno: string | undefined) => {
 
   const [questions, setQuestions] = useState<IQuestion[]>(initialState);
 
-  return {questions};
+  return {questions, setQuestions};
 };
 
 export default UseQuestion;

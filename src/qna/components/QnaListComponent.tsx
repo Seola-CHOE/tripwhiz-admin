@@ -11,9 +11,10 @@ import {
   TableHead, TableRow, Typography
 } from '@mui/material';
 import MenuItem from '@mui/material/MenuItem';
-import { ChangeEvent, useState } from 'react';
+import { ChangeEvent, useEffect, useState } from 'react';
 import { IQuestion, QuestionStatus } from '../../types/question';
 import useQuestion from '../../hooks/useQuestion';
+import { getQuestionList } from '../../api/questionAPI';
 
 
 interface Filters {
@@ -45,10 +46,23 @@ const applyFilters = (
 
 function QnaListComponent() {
 
-  const {questions} = useQuestion(undefined); // UseQuestion 훅 호출하여 questions 가져오기
+  const {questions, setQuestions} = useQuestion(undefined); // UseQuestion 훅 호출하여 questions 가져오기
   const [filters, setFilters] = useState<Filters>({
     status: null
   });
+
+  useEffect(() => {
+    const fetchQuestions = async () => {
+      try {
+        const data = await getQuestionList(); // API 호출
+        console.log("Fetched Questions:", data);
+        setQuestions(data); // 상태에 데이터 저장
+      } catch (error) {
+        console.error('Error fetching QnA list:', error);
+      }
+    };
+    fetchQuestions();
+  }, []);
 
 
 
