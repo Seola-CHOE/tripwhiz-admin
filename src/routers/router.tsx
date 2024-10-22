@@ -22,6 +22,9 @@ const Loader = (Component) => (props) =>
 const QnAList = Loader(
   lazy(() => import('src/qna/components/list'))
 );
+const QnARead = Loader(
+  lazy(() => import('src/qna/pages/QnaReadPage'))
+);
 
 
 // Status
@@ -55,6 +58,10 @@ const routes: RouteObject[] = [
       {
         path: 'list',
         element: <QnAList />
+      },
+      {
+        path: 'read',
+        element: <QnARead />
       }
     ]
   }

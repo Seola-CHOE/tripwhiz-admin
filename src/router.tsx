@@ -41,6 +41,9 @@ const UserSettings = Loader(
 const QnAList = Loader(
   lazy(() => import('src/qna/components/list'))
 );
+const QnARead = Loader(
+  lazy(() => import('src/qna/pages/QnaReadPage'))
+);
 
 // Components
 
@@ -187,6 +190,10 @@ const routes: RouteObject[] = [
       {
         path: 'list',
         element: <QnAList />
+      },
+      {
+        path: 'read',
+        element: <QnARead />
       }
     ]
   },
