@@ -1,7 +1,7 @@
 
 import { Box, Card, CardContent, Typography, TextField, Button, CircularProgress, FormControl, SelectChangeEvent } from '@mui/material';
 import { IQuestion } from '../../types/question';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
 
 
@@ -17,27 +17,58 @@ const initState: IQuestion = {
   del_flag: false,
   is_public: true,
   view_count: 0,
+  answer: '',
 };
 
 function QnaReadComponent() {
   const [qna, setQna] = useState<IQuestion>({ ...initState });
+  const [answer, setAnswer] = useState(''); // 관리자 답변 상태
   const [loading, setLoading] = useState(false);
-
+  const { qno } = useParams<{ qno: string }>(); // URL에서 qno 추출
   const navigate = useNavigate();
-  const [query, setQuery] = useSearchParams(); // URL의 query 파라미터를 관리하는 훅
 
+  // 질문 데이터를 불러오는 함수 (예시)
+  useEffect(() => {
+    // 실제 API 호출로 질문 데이터를 불러옴 (예시 데이터)
+    const fetchedQna: IQuestion = {
+      qno: 1,
+      title: '예시 질문 제목',
+      writer: '사용자1',
+      question: '이것은 예시 질문입니다.',
+      created_at: new Date(),
+      status: 'pending',
+      images: [],
+      del_flag: false,
+      is_public: true,
+      view_count: 0,
+      answer: '',
+    };
+    setQna(fetchedQna); // fetchedQna 사용
+  }, [qno]);
 
-
-  // popstate 이벤트를 감지하여 뒤로 가기 이벤트 처리
-  const handlePopState = (event: PopStateEvent) => {
-    console.log('popstate event detected', event.state); // 이벤트 발생 여부 확인용 로그
-
-    // 이전 상태로 돌아갈 때 리스트 페이지로 이동
-    if (event.state?.page) {
-      navigate(`/product/list?page=${query.get('page') || 1}&size=${query.get('size') || 10}`, { replace: true });
-    }
+  const handleAnswerChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setAnswer(e.target.value);
   };
 
+  const handleCancel = () => {
+    setLoading(true);
+    // 답변 취소 API 호출 (예시)
+    setTimeout(() => {
+      console.log('답변 취소');
+      setLoading(false);
+      navigate('/qna/list'); // 제출 후 Q&A 리스트로 이동
+    }, 1000);
+  };
+
+  const handleSubmit = () => {
+    setLoading(true);
+    // 답변 제출 API 호출 (예시)
+    setTimeout(() => {
+      console.log('답변 제출:', answer);
+      setLoading(false);
+      window.location.reload(); // 현재 페이지 새로 고침
+    }, 1000);
+  };
 
   return (
     <Box
@@ -50,49 +81,62 @@ function QnaReadComponent() {
       <Card sx={{ width: '95%', p: 4 }}>
         <CardContent>
           <Typography variant="h2" component="div" textAlign="center" gutterBottom>
-            Add New FAQ
+            Admin Q&A
           </Typography>
           <Box component="form" sx={{ mt: 3 }}>
-            <FormControl fullWidth margin="normal">
 
-            </FormControl>
+            {/* 질문 제목 및 작성자 */}
+            <Typography variant="h6">질문 No.: {qna.qno}</Typography>
+            <Typography variant="h6">질문 제목: {qna.title}</Typography>
+            <Typography variant="body1">작성자: {qna.writer}</Typography>
+            {/* 질문 내용 */}
+            <Typography variant="body2" sx={{ mt: 2, whiteSpace: 'pre-wrap' }}>
+              {qna.question}
+            </Typography>
+            <Box sx={{ mt: 2 }} /> {/* 여기서 여백을 추가합니다. */}
+            <Typography variant="h3" component="div" textAlign="left" gutterBottom>
+              Answer Here!
+            </Typography>
+            {/* 관리자의 답변 입력란 */}
             <TextField
               fullWidth
-              label="Title"
-              name="title"
-              value={qna.title}
-              margin="normal"
-              variant="outlined"
-            />
-            <TextField
-              fullWidth
-              label="Content"
-              name="content"
+              label="관리자 답변"
+              value={answer}
+              onChange={handleAnswerChange}
               margin="normal"
               variant="outlined"
               multiline
-              rows={6}
+              rows={4}
             />
             <Box display="flex" justifyContent="flex-end" mt={3}>
-              <Button
-                variant="contained"
-                color="primary"
-                disabled={loading}
-                sx={{ mr: 2 }}
-              >
-                {loading ? <CircularProgress size={24} color="inherit" /> : 'Submit'}
+              <Button variant="outlined" onClick={handleCancel} disabled={loading} sx={{ mr: 1 }} >
+                취소
               </Button>
-              <Button
-                variant="contained"
-                color="secondary"
-                disabled={loading}
-              >
-                Cancel
+              <Button variant="contained" color="primary" onClick={handleSubmit} disabled={loading}>
+                답변 제출
               </Button>
             </Box>
           </Box>
         </CardContent>
       </Card>
+
+      {/* 로딩 스피너 */}
+      {loading && (
+        <Box
+          position="fixed"
+          top={0}
+          left={0}
+          right={0}
+          bottom={0}
+          display="flex"
+          justifyContent="center"
+          alignItems="center"
+          bgcolor="rgba(255, 255, 255, 0.7)" // 배경 색상 조정 가능
+          zIndex={999}
+        >
+          <CircularProgress size={60} />
+        </Box>
+      )}
     </Box>
   );
 }

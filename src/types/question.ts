@@ -1,3 +1,5 @@
+import { string } from 'prop-types';
+
 export interface IQuestionImage {
   uploadFileNames: string; //기존 파일명을 나타내는 문자열 타입
   ord: number; //순서
@@ -16,4 +18,5 @@ export interface IQuestion {
   del_flag: boolean; //삭제 플래그
   is_public: boolean //공개 여부
   view_count: number //조회수
+  answer?: string;
 }
