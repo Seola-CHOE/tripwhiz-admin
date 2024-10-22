@@ -23,6 +23,19 @@ const QnAList = Loader(
   lazy(() => import('src/qna/pages/QnaListPage'))
 );
 
+//FaQ
+const FaQList = Loader(
+  lazy(() => import('src/faq/components/list'))
+);
+
+const FaQAdd = Loader(
+  lazy(() => import('src/faq/pages/FaqAddPage'))
+);
+
+const FaQModi = Loader(
+  lazy(() => import('src/faq/pages/FaqModifyPage'))
+);
+
 
 // Status
 const Status404 = Loader(
@@ -55,6 +68,29 @@ const routes: RouteObject[] = [
       {
         path: 'list',
         element: <QnAList />
+      }
+    ]
+  },
+  //FAQ
+  {
+    path: '/faq',
+    element: <SidebarLayout />,
+    children: [
+      {
+        path: '',
+        element: <Navigate to="list" replace />
+      },
+      {
+        path: 'list',
+        element: <FaQList/>
+      },
+      {
+        path: 'add',
+        element: <FaQAdd/>
+      },
+      {
+        path: 'modify',
+        element: <FaQModi/>
       }
     ]
   }
