@@ -24,6 +24,8 @@ interface QnaListComponentProps {
   questions: IQuestion[]; // 부모로부터 질문 배열을 전달받는 props
 }
 
+
+
 const applyFilters = (
   questions: IQuestion[], // IQuestion 배열을 받음
   filters: Filters // 상태 필터 적용
@@ -88,7 +90,7 @@ function QnaListComponent() {
     <Card>
 
       {/*헤더*/}
-      <CardHeader>
+      <CardHeader
         action={
           <Box width={150}>
             {/* 상태 필터를 위한 드롭다운을 표시합니다. */}
@@ -110,8 +112,8 @@ function QnaListComponent() {
             </FormControl>
           </Box>
         }
-        title="Recent Orders"
-      </CardHeader>
+        title="Recent Questions"
+      />
 
       {/* 카드와 테이블의 구분선 */}
       <Divider />
@@ -129,34 +131,38 @@ function QnaListComponent() {
           </TableHead>
 
           <TableBody>
-            {/* question 배열을 순회하며 테이블의 각 행을 생성 */}
-            {filteredQuestions.map((question) => (
-              <TableRow key={question.qno}>
-                {/* 질문 번호 */}
-                <TableCell>{question.qno}</TableCell>
+            {/* 필터링된 question 배열을 순회하며 테이블의 각 행을 생성 */}
+            {filteredQuestions.map((question) => {
+              return(
+                <TableRow
+                  hover
+                  key={question.qno}
+                >
+                  {/* 질문 번호 */}
+                  <TableCell>{question.qno}</TableCell>
 
-                {/* 질문 제목 */}
-                <TableCell align="left">
-                  <Typography variant="body1" fontWeight="bold" noWrap>
-                    {question.title}
-                  </Typography>
-                </TableCell>
+                  {/* 질문 제목 */}
+                  <TableCell align="left">
+                    <Typography variant="body1" fontWeight="bold" noWrap>
+                      {question.title}
+                    </Typography>
+                  </TableCell>
 
-                {/* 질문 상태 */}
-                {/*<TableCell>{question.status}</TableCell>*/}
-                <TableCell>{question.status === 'pending' ? '답변 대기' : '답변 완료'}</TableCell>
+                  {/* 질문 상태 */}
+                  {/*<TableCell>{question.status}</TableCell>*/}
+                  <TableCell>{question.status === 'pending' ? '답변 대기' : '답변 완료'}</TableCell>
 
-                {/* 작성자 */}
-                <TableCell>{question.writer}</TableCell>
+                  {/* 작성자 */}
+                  <TableCell>{question.writer}</TableCell>
 
-                {/* 작성일 */}
-                <TableCell>{question.created_at.toLocaleDateString()}</TableCell>
+                  {/* 작성일 */}
+                  <TableCell>{question.created_at.toLocaleDateString()}</TableCell>
 
-                {/* 조회수 */}
-                <TableCell>{question.view_count}</TableCell>
-              </TableRow>
-            ))}
-
+                  {/* 조회수 */}
+                  <TableCell>{question.view_count}</TableCell>
+                </TableRow>
+                );
+            })}
           </TableBody>
         </Table>
       </TableContainer>

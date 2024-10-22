@@ -21,6 +21,7 @@ const Loader = (Component) => (props) =>
 //QnA
 const QnAList = Loader(
   lazy(() => import('src/qna/pages/QnaListPage'))
+  // lazy(() => import('src/qna/components/list'))
 );
 
 
