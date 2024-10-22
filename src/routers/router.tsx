@@ -22,6 +22,9 @@ const Loader = (Component) => (props) =>
 const QnAList = Loader(
   lazy(() => import('src/qna/pages/QnaListPage'))
 );
+const QnARead = Loader(
+  lazy(() => import('src/qna/pages/QnaReadPage'))
+);
 
 //FaQ
 const FaQList = Loader(
@@ -68,6 +71,10 @@ const routes: RouteObject[] = [
       {
         path: 'list',
         element: <QnAList />
+      },
+      {
+        path: 'read',
+        element: <QnARead />
       }
     ]
   },

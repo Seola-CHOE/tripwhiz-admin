@@ -1,5 +1,7 @@
 import { IQuestion } from '../types/question';
 import { useState } from 'react';
+import { string } from 'prop-types';
+
 
 const initialState: IQuestion[] = [
 {
@@ -12,7 +14,8 @@ const initialState: IQuestion[] = [
   images: [],
   del_flag: false,
   is_public: true,
-  view_count: 0
+  view_count: 0,
+
   }
 ];
 
