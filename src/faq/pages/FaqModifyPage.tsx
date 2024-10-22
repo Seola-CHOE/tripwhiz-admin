@@ -1,8 +1,9 @@
+import FaqModifyComponent from '../components/FaqModifyComponent';
 
 
 function FaqModifyPage() {
   return (
-    <div></div>
+    <FaqModifyComponent/>
   );
 }
 

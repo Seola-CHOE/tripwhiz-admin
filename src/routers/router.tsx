@@ -22,6 +22,22 @@ const Loader = (Component) => (props) =>
 const QnAList = Loader(
   lazy(() => import('src/qna/components/list'))
 );
+const QnARead = Loader(
+  lazy(() => import('src/qna/pages/QnaReadPage'))
+);
+
+//FaQ
+const FaQList = Loader(
+  lazy(() => import('src/faq/components/list'))
+);
+
+const FaQAdd = Loader(
+  lazy(() => import('src/faq/pages/FaqAddPage'))
+);
+
+const FaQModi = Loader(
+  lazy(() => import('src/faq/pages/FaqModifyPage'))
+);
 
 
 // Status
@@ -55,6 +71,33 @@ const routes: RouteObject[] = [
       {
         path: 'list',
         element: <QnAList />
+      },
+      {
+        path: 'read',
+        element: <QnARead />
+      }
+    ]
+  },
+  //FAQ
+  {
+    path: '/faq',
+    element: <SidebarLayout />,
+    children: [
+      {
+        path: '',
+        element: <Navigate to="list" replace />
+      },
+      {
+        path: 'list',
+        element: <FaQList/>
+      },
+      {
+        path: 'add',
+        element: <FaQAdd/>
+      },
+      {
+        path: 'modify',
+        element: <FaQModi/>
       }
     ]
   }
