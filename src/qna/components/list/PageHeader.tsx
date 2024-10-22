@@ -1,9 +1,9 @@
 import { Typography, Grid } from '@mui/material';
 
-
+//삭제 금지 XX
 function PageHeader() {
   const user = {
-    name: 'SeongO Jin',
+    name: 'SungOh Jin',
     avatar: '/static/images/avatars/1.jpg'
   };
   return (

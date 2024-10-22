@@ -11,9 +11,10 @@ import {
   TableHead, TableRow, Typography
 } from '@mui/material';
 import MenuItem from '@mui/material/MenuItem';
-import { ChangeEvent, useState } from 'react';
+import { ChangeEvent, useEffect, useState } from 'react';
 import { IQuestion, QuestionStatus } from '../../types/question';
 import useQuestion from '../../hooks/useQuestion';
+import { getQuestionList } from '../../api/questionAPI';
 
 
 interface Filters {
@@ -23,6 +24,8 @@ interface Filters {
 interface QnaListComponentProps {
   questions: IQuestion[]; // 부모로부터 질문 배열을 전달받는 props
 }
+
+
 
 const applyFilters = (
   questions: IQuestion[], // IQuestion 배열을 받음
@@ -43,10 +46,23 @@ const applyFilters = (
 
 function QnaListComponent() {
 
-  const {questions} = useQuestion(undefined); // UseQuestion 훅 호출하여 questions 가져오기
+  const {questions, setQuestions} = useQuestion(undefined); // UseQuestion 훅 호출하여 questions 가져오기
   const [filters, setFilters] = useState<Filters>({
     status: null
   });
+
+  useEffect(() => {
+    const fetchQuestions = async () => {
+      try {
+        const data = await getQuestionList(); // API 호출
+        console.log("Fetched Questions:", data);
+        setQuestions(data); // 상태에 데이터 저장
+      } catch (error) {
+        console.error('Error fetching QnA list:', error);
+      }
+    };
+    fetchQuestions();
+  }, []);
 
 
 
@@ -88,7 +104,7 @@ function QnaListComponent() {
     <Card>
 
       {/*헤더*/}
-      <CardHeader>
+      <CardHeader
         action={
           <Box width={150}>
             {/* 상태 필터를 위한 드롭다운을 표시합니다. */}
@@ -110,8 +126,8 @@ function QnaListComponent() {
             </FormControl>
           </Box>
         }
-        title="Recent Orders"
-      </CardHeader>
+        title="Recent Questions"
+      />
 
       {/* 카드와 테이블의 구분선 */}
       <Divider />
@@ -129,34 +145,38 @@ function QnaListComponent() {
           </TableHead>
 
           <TableBody>
-            {/* question 배열을 순회하며 테이블의 각 행을 생성 */}
-            {filteredQuestions.map((question) => (
-              <TableRow key={question.qno}>
-                {/* 질문 번호 */}
-                <TableCell>{question.qno}</TableCell>
+            {/* 필터링된 question 배열을 순회하며 테이블의 각 행을 생성 */}
+            {filteredQuestions.map((question) => {
+              return(
+                <TableRow
+                  hover
+                  key={question.qno}
+                >
+                  {/* 질문 번호 */}
+                  <TableCell>{question.qno}</TableCell>
 
-                {/* 질문 제목 */}
-                <TableCell align="left">
-                  <Typography variant="body1" fontWeight="bold" noWrap>
-                    {question.title}
-                  </Typography>
-                </TableCell>
+                  {/* 질문 제목 */}
+                  <TableCell align="left">
+                    <Typography variant="body1" fontWeight="bold" noWrap>
+                      {question.title}
+                    </Typography>
+                  </TableCell>
 
-                {/* 질문 상태 */}
-                {/*<TableCell>{question.status}</TableCell>*/}
-                <TableCell>{question.status === 'pending' ? '답변 대기' : '답변 완료'}</TableCell>
+                  {/* 질문 상태 */}
+                  {/*<TableCell>{question.status}</TableCell>*/}
+                  <TableCell>{question.status === 'pending' ? '답변 대기' : '답변 완료'}</TableCell>
 
-                {/* 작성자 */}
-                <TableCell>{question.writer}</TableCell>
+                  {/* 작성자 */}
+                  <TableCell>{question.writer}</TableCell>
 
-                {/* 작성일 */}
-                <TableCell>{question.created_at.toLocaleDateString()}</TableCell>
+                  {/* 작성일 */}
+                  <TableCell>{question.created_at.toLocaleDateString()}</TableCell>
 
-                {/* 조회수 */}
-                <TableCell>{question.view_count}</TableCell>
-              </TableRow>
-            ))}
-
+                  {/* 조회수 */}
+                  <TableCell>{question.view_count}</TableCell>
+                </TableRow>
+                );
+            })}
           </TableBody>
         </Table>
       </TableContainer>
