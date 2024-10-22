@@ -12,7 +12,8 @@ const initialState: IQuestion[] = [
   images: [],
   del_flag: false,
   is_public: true,
-  view_count: 0
+  view_count: 0,
+  answer: '',
   }
 ];
 
