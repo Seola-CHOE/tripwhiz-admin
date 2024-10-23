@@ -15,7 +15,6 @@ const initialState: IQuestion[] = [
   del_flag: false,
   is_public: true,
   view_count: 0,
-
   }
 ];
 
