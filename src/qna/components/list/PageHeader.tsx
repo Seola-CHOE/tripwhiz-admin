@@ -3,7 +3,7 @@ import { Typography, Grid } from '@mui/material';
 //삭제 금지 XX
 function PageHeader() {
   const user = {
-    name: 'SungOh Jin',
+    name: '밍쥬 차',
     avatar: '/static/images/avatars/1.jpg'
   };
   return (
