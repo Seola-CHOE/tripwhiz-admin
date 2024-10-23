@@ -1,50 +1,53 @@
 
 import { Box, Card, CardContent, Typography, TextField, Button, CircularProgress, FormControl, SelectChangeEvent } from '@mui/material';
-import { IQuestion } from '../../types/question';
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
+import axios from 'axios';
 
 
+// Q&A 데이터 타입 정의
+interface IAnswer {
+  qno: number;
+  title: string;
+  writer: string;
+  question: string;
+  created_at: Date;
+  status: '답변대기' | '답변완료';
+  answer: string;
+}
 
-const initState: IQuestion = {
+const initState: IAnswer = {
   qno: 0,
   title: '',
   writer: '',
-  created_at: new Date(),
   question: '',
-  status: 'pending',
-  images: [],
-  del_flag: false,
-  is_public: true,
-  view_count: 0,
+  created_at: new Date(),
+  status: '답변대기',
   answer: '',
 };
 
+
 function QnaReadComponent() {
-  const [qna, setQna] = useState<IQuestion>({ ...initState });
+  const [qna, setQna] = useState<IAnswer>({ ...initState });
   const [answer, setAnswer] = useState(''); // 관리자 답변 상태
   const [loading, setLoading] = useState(false);
   const { qno } = useParams<{ qno: string }>(); // URL에서 qno 추출
   const navigate = useNavigate();
 
-  // 질문 데이터를 불러오는 함수 (예시)
+
+  // 질문 데이터를 불러오는 함수
   useEffect(() => {
-    // 실제 API 호출로 질문 데이터를 불러옴 (예시 데이터)
-    const fetchedQna: IQuestion = {
-      qno: 1,
-      title: '예시 질문 제목',
-      writer: '사용자1',
-      question: '이것은 예시 질문입니다.',
-      created_at: new Date(),
-      status: 'pending',
-      images: [],
-      del_flag: false,
-      is_public: true,
-      view_count: 0,
-      answer: '',
-    };
-    setQna(fetchedQna); // fetchedQna 사용
+    // 실제 API 호출로 질문 데이터를 불러옴
+    axios.get(`/api/qna/${qno}`) // qno에 해당하는 데이터를 가져옴
+      .then((response) => {
+        const fetchedQna: IAnswer = response.data; // API 응답 데이터 사용
+        setQna(fetchedQna); // 받아온 데이터를 상태로 설정
+      })
+      .catch((error) => {
+        console.error('Failed to fetch Q&A:', error);
+      });
   }, [qno]);
+
 
   const handleAnswerChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setAnswer(e.target.value);
@@ -52,7 +55,7 @@ function QnaReadComponent() {
 
   const handleCancel = () => {
     setLoading(true);
-    // 답변 취소 API 호출 (예시)
+    // 답변 취소 API 호출
     setTimeout(() => {
       console.log('답변 취소');
       setLoading(false);
@@ -62,13 +65,46 @@ function QnaReadComponent() {
 
   const handleSubmit = () => {
     setLoading(true);
-    // 답변 제출 API 호출 (예시)
+    // 답변 제출 API 호출
     setTimeout(() => {
       console.log('답변 제출:', answer);
       setLoading(false);
       window.location.reload(); // 현재 페이지 새로 고침
     }, 1000);
   };
+
+  const handleEdit = () => {
+    setLoading(true);
+    // 수정 API 호출 (예시)
+    axios.put(`/api/qna/${qna.qno}`, { ...qna, answer }) // 수정할 데이터와 qno 전송
+      .then((response) => {
+        console.log('수정 완료:', response.data);
+        navigate('/qna/list'); // 수정 후 Q&A 리스트로 이동
+      })
+      .catch((error) => {
+        console.error('수정 실패:', error);
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  };
+
+  const handleDelete = () => {
+    setLoading(true);
+    // 삭제 API 호출 (예시)
+    axios.delete(`/api/qna/${qna.qno}`)
+      .then(() => {
+        console.log('삭제 완료');
+        navigate('/qna/list'); // 삭제 후 Q&A 리스트로 이동
+      })
+      .catch((error) => {
+        console.error('삭제 실패:', error);
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  };
+
 
   return (
     <Box
@@ -93,29 +129,47 @@ function QnaReadComponent() {
             <Typography variant="body2" sx={{ mt: 2, whiteSpace: 'pre-wrap' }}>
               {qna.question}
             </Typography>
-            <Box sx={{ mt: 2 }} /> {/* 여기서 여백을 추가합니다. */}
-            <Typography variant="h3" component="div" textAlign="left" gutterBottom>
-              Answer Here!
-            </Typography>
             {/* 관리자의 답변 입력란 */}
-            <TextField
-              fullWidth
-              label="관리자 답변"
-              value={answer}
-              onChange={handleAnswerChange}
-              margin="normal"
-              variant="outlined"
-              multiline
-              rows={4}
-            />
-            <Box display="flex" justifyContent="flex-end" mt={3}>
-              <Button variant="outlined" onClick={handleCancel} disabled={loading} sx={{ mr: 1 }} >
-                취소
-              </Button>
-              <Button variant="contained" color="primary" onClick={handleSubmit} disabled={loading}>
-                답변 제출
-              </Button>
-            </Box>
+            {qna.status === '답변대기' && (
+              <>
+                <Typography variant="h3" component="div" textAlign="left" gutterBottom>
+                  Answer Here!
+                </Typography>
+                <TextField
+                  fullWidth
+                  label="관리자 답변"
+                  value={answer}
+                  onChange={handleAnswerChange}
+                  margin="normal"
+                  variant="outlined"
+                  multiline
+                  rows={4}
+                />
+                <Box display="flex" justifyContent="flex-end" mt={3}>
+                  <Button variant="outlined" onClick={handleCancel} disabled={loading} sx={{ mr: 1 }}>
+                    취소
+                  </Button>
+                  <Button variant="contained" color="primary" onClick={handleSubmit} disabled={loading}>
+                    답변 완료
+                  </Button>
+                </Box>
+              </>
+            )}
+
+            {/* 상태가 '답변완료'일 경우 버튼 렌더링 */}
+            {qna.status === '답변완료' && (
+              <Box display="flex" justifyContent="flex-end" mt={3}>
+                <Button variant="contained" color="primary" onClick={handleEdit} disabled={loading} sx={{ mr: 1 }}>
+                  수정
+                </Button>
+                <Button variant="outlined" onClick={handleCancel} disabled={loading} sx={{ mr: 1 }}>
+                  취소
+                </Button>
+                <Button variant="contained" color="error" onClick={handleDelete} disabled={loading}>
+                  삭제
+                </Button>
+              </Box>
+            )}
           </Box>
         </CardContent>
       </Card>
@@ -131,7 +185,7 @@ function QnaReadComponent() {
           display="flex"
           justifyContent="center"
           alignItems="center"
-          bgcolor="rgba(255, 255, 255, 0.7)" // 배경 색상 조정 가능
+          bgcolor="rgba(255, 255, 255, 0.7)"
           zIndex={999}
         >
           <CircularProgress size={60} />
