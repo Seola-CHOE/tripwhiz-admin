@@ -5,7 +5,7 @@ export interface IQuestionImage {
   ord: number; //순서
 }
 
-export type QuestionStatus = 'pending' | 'answered';
+export type QuestionStatus = '답변완료' | '답변대기';
 
 export interface IQuestion {
   qno: number; //질문 번호
@@ -13,10 +13,10 @@ export interface IQuestion {
   writer: string; //작성자
   createdDate: string; //작성일
   question: string; //질문 내용
-  status: QuestionStatus;
+  status: '답변완료' | '답변대기';
   images?: IQuestionImage[];
   del_flag: boolean; //삭제 플래그
   is_public: boolean //공개 여부
-  view_count: number //조회수
+  viewCount: number //조회수
   answer?: string;
 }

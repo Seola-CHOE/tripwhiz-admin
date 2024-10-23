@@ -10,11 +10,11 @@ const initialState: IQuestion[] = [
   'writer': '',
   'createdDate': '',
   'question': '',
-  'status': 'pending',
+  'status': '답변대기',
   'images': [],
   'del_flag': false,
   'is_public': true,
-  'view_count': 0,
+  'viewCount': 0,
 
   }
 ];

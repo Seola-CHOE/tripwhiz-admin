@@ -12,11 +12,11 @@ const initState: IQuestion = {
   writer: '',
   createdDate: '',
   question: '',
-  status: 'pending',
+  status: '답변대기',
   images: [],
   del_flag: false,
   is_public: true,
-  view_count: 0,
+  viewCount: 0,
   answer: '',
 };
 
@@ -36,11 +36,11 @@ function QnaReadComponent() {
       writer: '사용자1',
       question: '이것은 예시 질문입니다.',
       createdDate:'',
-      status: 'pending',
+      status: '답변대기',
       images: [],
       del_flag: false,
       is_public: true,
-      view_count: 0,
+      viewCount: 0,
       answer: '',
     };
     setQna(fetchedQna); // fetchedQna 사용
