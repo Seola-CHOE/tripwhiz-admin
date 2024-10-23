@@ -2,7 +2,6 @@ import QnaListComponent from '../components/QnaListComponent';
 import PageHeader from '../components/list/PageHeader';
 import PageTitleWrapper from '../../components/PageTitleWrapper';
 import { Container, Grid } from '@mui/material';
-import RecentOrders from '../components/list/RecentOrders';
 import Footer from '../../components/Footer';
 
 
