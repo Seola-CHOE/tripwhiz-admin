@@ -156,7 +156,7 @@ function QnaListComponent() {
                   <TableCell>{question.qno}</TableCell>
 
                   {/* 질문 제목 */}
-                  <TableCell align="left">
+                  <TableCell align="left" style={{ width: '500px' }}>
                     <Typography variant="body1" fontWeight="bold" noWrap>
                       {question.title}
                     </Typography>
@@ -170,7 +170,7 @@ function QnaListComponent() {
                   <TableCell>{question.writer}</TableCell>
 
                   {/* 작성일 */}
-                  <TableCell>{question.created_at.toLocaleDateString()}</TableCell>
+                  <TableCell>{new Date(question.createdDate).toLocaleDateString()}</TableCell>
 
                   {/* 조회수 */}
                   <TableCell>{question.view_count}</TableCell>

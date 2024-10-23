@@ -11,7 +11,7 @@ export interface IQuestion {
   qno: number; //질문 번호
   title: string; //제목
   writer: string; //작성자
-  created_at: Date; //작성일
+  createdDate: string; //작성일
   question: string; //질문 내용
   status: QuestionStatus;
   images?: IQuestionImage[];
