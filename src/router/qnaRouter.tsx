@@ -33,7 +33,7 @@ const qnaRouter = {
       element: <QnAList />
     },
     {
-      path: 'read',
+      path: 'read/:qno',
       element: <QnARead />
     }
   ]

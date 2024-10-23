@@ -32,23 +32,27 @@ const initState: IAnswer = {
 function QnaReadComponent() {
   const [qna, setQna] = useState<IAnswer>({ ...initState });
   const [answer, setAnswer] = useState(''); // 관리자 답변 상태
-  const [loading, setLoading] = useState(false);
-  const { ano } = useParams<{ ano: string }>(); // URL에서 ano 추출
+  const [loading, setLoading] = useState(true);
+  const { qno } = useParams<{ qno: string }>(); // URL에서 qno 추출
   const navigate = useNavigate();
 
 
   // 질문 데이터를 불러오는 함수
   useEffect(() => {
     // 실제 API 호출로 질문 데이터를 불러옴
-    axios.get(`/api/qna/${ano}`) // ano 해당하는 데이터를 가져옴
+    axios.get(`/api/qna/${qno}`) // ano 해당하는 데이터를 가져옴
       .then((response) => {
         const fetchedQna: IAnswer = response.data; // API 응답 데이터 사용
         setQna(fetchedQna); // 받아온 데이터를 상태로 설정
+        setAnswer(fetchedQna.answer); // 수정된 부분: 기존 답변 설정
       })
       .catch((error) => {
         console.error('Failed to fetch Q&A:', error);
+      })
+      .finally(() => {
+        setLoading(false); // 데이터 로딩 종료
       });
-  }, [ano]);
+  }, [qno]);
 
 
   const handleAnswerChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -137,6 +141,10 @@ function QnaReadComponent() {
           <Typography variant="h2" component="div" textAlign="center" gutterBottom>
             Admin Q&A
           </Typography>
+          {loading ? ( // 수정된 부분: 로딩 중일 때
+            <CircularProgress />
+          ) : (
+
           <Box component="form" sx={{ mt: 3 }}>
 
             {/* 질문 제목 및 작성자 */}
@@ -194,6 +202,7 @@ function QnaReadComponent() {
               </>
             )}
           </Box>
+          )}
         </CardContent>
       </Card>
 
