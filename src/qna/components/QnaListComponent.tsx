@@ -16,6 +16,7 @@ import { IQuestion, QuestionStatus } from '../../types/question';
 import useQuestion from '../../hooks/useQuestion';
 import { getQuestionList } from '../../api/questionAPI';
 import Label from '../../components/Label';
+import { useNavigate } from 'react-router-dom';
 
 
 // interface Filters {
@@ -50,10 +51,13 @@ const applyFilters = (
 };
 
 
+
 function QnaListComponent() {
 
   const { questions, setQuestions } = useQuestion(undefined);
   const [filterStatus, setFilterStatus] = useState<QuestionStatus | undefined>();
+
+  const navigate = useNavigate(); // useNavigate 훅 사용_SA
 
   useEffect(() => {
     const fetchQuestions = async () => {
@@ -93,6 +97,11 @@ function QnaListComponent() {
 
   const filteredQuestions = applyFilters(questions, filterStatus);
   console.log(filteredQuestions);
+
+  // 질문 클릭 시 상세 페이지로 이동하는 함수_SA
+  const handleQuestionClick = (qno: number) => {
+    navigate(`/qna/read/${qno}`); // 질문 번호에 해당하는 상세 페이지로 이동
+  };
 
   return (
     <Card>
@@ -146,6 +155,8 @@ function QnaListComponent() {
                   <TableRow
                     hover
                     key={question.qno}
+                    onClick={() => handleQuestionClick(question.qno)} // 클릭 시 상세 페이지로 이동_SA
+
                   >
                     {/* 질문 번호 */}
                     <TableCell align="center">{question.qno}</TableCell>
