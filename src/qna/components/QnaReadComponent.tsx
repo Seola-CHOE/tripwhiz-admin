@@ -1,8 +1,7 @@
 
-import { Box, Card, CardContent, Typography, TextField, Button, CircularProgress, FormControl, SelectChangeEvent } from '@mui/material';
-import { IQuestion } from '../../types/question';
+import { Box, Card, CardContent, Typography, TextField, Button, CircularProgress } from '@mui/material';
 import { useEffect, useState } from 'react';
-import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
 
 
