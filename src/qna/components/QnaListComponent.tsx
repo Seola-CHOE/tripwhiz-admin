@@ -19,13 +19,6 @@ import Label from '../../components/Label';
 import { useNavigate } from 'react-router-dom';
 
 
-// interface Filters {
-//   status?: QuestionStatus;
-// }
-//
-// interface QnaListComponentProps {
-//   questions: IQuestion[]; // 부모로부터 질문 배열을 전달받는 props
-// }
 
 // 상태 레이블을 반환하는 함수
 const getStatusLabel = (status: QuestionStatus): JSX.Element => {
