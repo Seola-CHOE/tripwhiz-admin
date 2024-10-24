@@ -2,7 +2,7 @@ import { lazy, Suspense } from 'react';
 import SuspenseLoader from '../components/SuspenseLoader';
 import SidebarLayout from '../layouts/SidebarLayout';
 import { Navigate } from 'react-router-dom';
-
+import FaqListPage from '../faq/pages/FaqListPage';
 
 const Loader = (Component) => (props) =>
   (
@@ -36,7 +36,8 @@ const faqRouter = {
     },
     {
         path: 'list',
-        element: <FaQList/>
+        element: <FaqListPage/>
+        // element: <FaQList/>
     },
     {
         path: 'add',
