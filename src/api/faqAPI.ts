@@ -16,9 +16,6 @@ export const getFaqList = async (): Promise<IFaq[]> => {
   try {
     const res = await axios.get<{ dtoList: IFaq[] }>(`${host}/list`);
 
-    console.log(`Request URL: ${host}/list`);
-    console.log('Response Data:', res.data);
-
     return res.data.dtoList;
   } catch (error) {
     console.error('Failed to fetch FAQ list:', error);
