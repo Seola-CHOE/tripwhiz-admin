@@ -1,5 +1,3 @@
-// types/faq.ts
-
 // FAQ 데이터 인터페이스 정의
 export interface IFaq {
   fno: number;
@@ -16,5 +14,3 @@ export interface ICategory {
   cno: number; // 카테고리 번호
   cname: string; // 카테고리 이름
 }
-
-

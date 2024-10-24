@@ -9,10 +9,6 @@ import faqRouter from './faqRouter';
 import SidebarLayout from '../layouts/SidebarLayout';
 import { Navigate } from 'react-router-dom';
 
-
-
-
-
 const Loader = (Component) => (props) =>
   (
     <Suspense fallback={<SuspenseLoader />}>
