@@ -1,130 +1,85 @@
-// components/FaqListComponent.tsx
-
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import {
-  Box,
+  Accordion,
+  AccordionSummary,
+  AccordionDetails,
+  Typography,
   Card,
   CardHeader,
   Divider,
-  FormControl,
-  InputLabel,
-  MenuItem,
-  Select,
-  SelectChangeEvent,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
+  Box,
 } from '@mui/material';
-import { IFaq, ICategory } from '../../types/faq';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import { IFaq } from '../../types/faq';
 import { getFaqList } from '../../api/faqAPI';
 
 const FaqListComponent = () => {
   const [faqs, setFaqs] = useState<IFaq[]>([]);
-  const [categories, setCategories] = useState<ICategory[]>([]);
-  const [filterCategory, setFilterCategory] = useState<string>('전체');
+  const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        // FAQ 데이터와 카테고리 데이터를 함께 가져오기
-        const faqData = await getFaqList();
-        setFaqs(faqData);
-        // 카테고리 데이터 추출 및 설정
-        const categoryData = Array.from(
-          new Set(faqData.map((faq) => faq.category))
-        );
-        setCategories(categoryData);
-      } catch (error) {
-        console.error('Error fetching data:', error);
-      }
-    };
-    fetchData();
+  const fetchData = useCallback(async () => {
+    try {
+      const faqData = await getFaqList();
+      setFaqs(faqData);
+      setError(null);
+    } catch (error) {
+      console.error('데이터 가져오기 오류:', error);
+      setError('데이터를 불러오는 데 실패했습니다. 다시 시도해 주세요.');
+    }
   }, []);
 
-  // 카테고리 필터 옵션 설정
-  const categoryOptions = [
-    { id: '전체', name: '전체' },
-    ...categories.map((category) => ({ id: category.cno.toString(), name: category.cname })),
-  ];
+  useEffect(() => {
+    fetchData();
+  }, [fetchData]);
 
-  // 카테고리 변경 핸들러
-  const handleCategoryChange = (e: SelectChangeEvent<string>) => {
-    setFilterCategory(e.target.value);
-  };
-
-  // FAQ 필터링 함수
-  const filteredFaqs = faqs.filter((faq) => {
-    if (filterCategory === '전체') return true;
-    return faq.cno.toString() === filterCategory;
-  });
+  const limitedFaqs = faqs.slice(0, 5); // 상위 5개 FAQ만 표시
 
   return (
-    <Card>
-      <CardHeader
-        action={
-          <Box width={150}>
-            <FormControl fullWidth variant="outlined">
-              <InputLabel>Category</InputLabel>
-              <Select
-                value={filterCategory}
-                onChange={handleCategoryChange}
-                label="Category"
+    <Box>
+      <Typography variant="h2" align="center" style={{ marginBottom: '20px', fontWeight: 'bold' }}>
+        FAQ TOP 5
+      </Typography>
+
+      {error && (
+        <Typography color="error" align="center" variant="body1" style={{ marginTop: '10px' }}>
+          {error}
+        </Typography>
+      )}
+
+      {limitedFaqs.length > 0 ? (
+        limitedFaqs.map((faq) => (
+          <Card key={faq.fno} style={{ marginBottom: '16px' }}>
+            <Box style={{ backgroundColor: '#FCFBF0' }}>
+              <CardHeader
+                title={`Q: ${faq.question}`}
+                subheader={`Category: ${faq.category?.cname || 'No category'}`}
+              />
+            </Box>
+            <Divider />
+            <Accordion>
+              <AccordionSummary
+                expandIcon={<ExpandMoreIcon />}
+                aria-controls={`faq-content-${faq.fno}`}
+                id={`faq-header-${faq.fno}`}
               >
-                {categoryOptions.map((option) => (
-                  <MenuItem key={option.id} value={option.id}>
-                    {option.name}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
-          </Box>
-        }
-        title="FAQ List"
-      />
-
-      <Divider />
-
-      <TableContainer>
-        <Table>
-          <TableHead style={{ backgroundColor: '#FCFBF0' }}>
-            <TableRow>
-              <TableCell align="center">No.</TableCell>
-              <TableCell align="center">Question</TableCell>
-              <TableCell align="center">Answer</TableCell>
-              <TableCell align="center">Deleted</TableCell>
-              <TableCell align="center">View Count</TableCell>
-              <TableCell align="center">Category</TableCell>
-            </TableRow>
-          </TableHead>
-
-          <TableBody>
-            {filteredFaqs.length > 0 ? (
-              filteredFaqs.map((faq) => (
-                <TableRow hover key={faq.fno}>
-                  <TableCell align="center">{faq.fno}</TableCell>
-                  <TableCell align="left">{faq.question}</TableCell>
-                  <TableCell align="left">{faq.answer}</TableCell>
-                  <TableCell align="center">{faq.del_flag ? 'Yes' : 'No'}</TableCell>
-                  <TableCell align="center">{faq.view_cnt}</TableCell>
-                  <TableCell align="center">
-                    {faq.category?.cname || 'Unknown'}
-                  </TableCell>
-                </TableRow>
-              ))
-            ) : (
-              <TableRow>
-                <TableCell colSpan={6} align="center">
-                  No FAQs available.
-                </TableCell>
-              </TableRow>
-            )}
-          </TableBody>
-        </Table>
-      </TableContainer>
-    </Card>
+                <Typography variant="subtitle1" style={{ fontWeight: 'bold' }}>
+                  Question Details
+                </Typography>
+              </AccordionSummary>
+              <AccordionDetails>
+                <Typography variant="body2" style={{ whiteSpace: 'pre-wrap' }}>
+                  A: {faq.answer}
+                </Typography>
+              </AccordionDetails>
+            </Accordion>
+          </Card>
+        ))
+      ) : (
+        <Typography align="center" style={{ marginTop: '20px' }}>
+          No FAQs available.
+        </Typography>
+      )}
+    </Box>
   );
 };
 

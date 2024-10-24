@@ -1,15 +1,8 @@
-// api/faqAPI.ts
-
 import axios from 'axios';
-import { IFaq, ICategory } from '../types/faq';
+import { IFaq } from '../types/faq';
 
 // API 호스트 URL 설정
-const host = 'http://10.10.10.11:8080/api/faq';
-const header = {
-  headers: {
-    'Content-Type': 'application/json',
-  },
-};
+const host = 'http://10.10.10.184:8080/api/faq';
 
 // FAQ 리스트를 가져오는 함수
 export const getFaqList = async (): Promise<IFaq[]> => {
