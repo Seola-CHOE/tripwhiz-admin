@@ -122,7 +122,7 @@ function QnaListComponent() {
             </FormControl>
           </Box>
         }
-        title="Recent Questions"
+        title="App    |    픽업    |    매장    |    환불    |    영수증"
       />
 
       {/* 카드와 테이블의 구분선 */}
