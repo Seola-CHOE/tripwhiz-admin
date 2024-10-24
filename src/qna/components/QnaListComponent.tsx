@@ -19,13 +19,6 @@ import Label from '../../components/Label';
 import { useNavigate } from 'react-router-dom';
 
 
-// interface Filters {
-//   status?: QuestionStatus;
-// }
-//
-// interface QnaListComponentProps {
-//   questions: IQuestion[]; // 부모로부터 질문 배열을 전달받는 props
-// }
 
 // 상태 레이블을 반환하는 함수
 const getStatusLabel = (status: QuestionStatus): JSX.Element => {
@@ -129,7 +122,7 @@ function QnaListComponent() {
             </FormControl>
           </Box>
         }
-        title="Recent Questions"
+        title="App    |    픽업    |    매장    |    환불    |    영수증"
       />
 
       {/* 카드와 테이블의 구분선 */}
