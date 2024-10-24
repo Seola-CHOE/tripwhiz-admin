@@ -3,34 +3,12 @@ import { Box, Card, CardContent, Typography, TextField, Button, CircularProgress
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
+import { IAnswer } from '../../types/answer';
 
-
-// Q&A 데이터 타입 정의
-interface IAnswer {
-  ano: number;
-  title: string;
-  writer: string;
-  question: string;
-  created_date: Date;
-  updated_date?: Date;
-  status: '답변대기' | '답변완료';
-  answer: string;
-}
-
-const initState: IAnswer = {
-  ano: 0,
-  title: '',
-  writer: '',
-  question: '',
-  created_date: new Date(),
-  updated_date: undefined,
-  status: '답변대기',
-  answer: ''
-};
 
 
 function QnaReadComponent() {
-  const [qna, setQna] = useState<IAnswer>({ ...initState });
+  const [qna, setQna] = useState<IAnswer>(undefined);
   const [answer, setAnswer] = useState(''); // 관리자 답변 상태
   const [loading, setLoading] = useState(true);
   const { qno } = useParams<{ qno: string }>(); // URL에서 qno 추출
@@ -44,7 +22,7 @@ function QnaReadComponent() {
       .then((response) => {
         const fetchedQna: IAnswer = response.data; // API 응답 데이터 사용
         setQna(fetchedQna); // 받아온 데이터를 상태로 설정
-        setAnswer(fetchedQna.answer); // 수정된 부분: 기존 답변 설정
+        setAnswer(fetchedQna.acontent); // 수정된 부분: 기존 답변 설정
       })
       .catch((error) => {
         console.error('Failed to fetch Q&A:', error);
@@ -148,15 +126,15 @@ function QnaReadComponent() {
           <Box component="form" sx={{ mt: 3 }}>
 
             {/* 질문 제목 및 작성자 */}
-            <Typography variant="h6">질문 No.: {qna.ano}</Typography>
-            <Typography variant="h6">질문 제목: {qna.title}</Typography>
-            <Typography variant="body1">작성자: {qna.writer}</Typography>
+            <Typography variant="h6">질문 No.: {qna?.question.qno}</Typography>
+            <Typography variant="h6">질문 제목: {qna?.question.title}</Typography>
+            <Typography variant="body1">작성자: {qna?.question.writer}</Typography>
             {/* 질문 내용 */}
             <Typography variant="body2" sx={{ mt: 2, whiteSpace: 'pre-wrap' }}>
-              {qna.question}
+              {qna?.question.question}
             </Typography>
             {/* 관리자의 답변 입력란 */}
-            {qna.status === '답변대기' && (
+            {qna?.question.status === '답변대기' && (
               <>
                 <Typography variant="h3" component="div" textAlign="left" gutterBottom>
                   Answer Here!
@@ -183,7 +161,7 @@ function QnaReadComponent() {
             )}
 
             {/* 상태가 '답변완료'일 경우 버튼 렌더링 */}
-            {qna.status === '답변완료' && (
+            {qna?.question.status === '답변완료' && (
               <>
                 <Typography variant="h6" sx={{ mt: 2 }}>
                   답변 완료 날짜: {qna.updated_date ? new Date(qna.updated_date).toLocaleString() : '날짜 없음'}
