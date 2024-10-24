@@ -6,7 +6,7 @@ export interface IFaq {
   del_flag: boolean;
   view_cnt: number;
   cno: number; // 카테고리 번호
-  category: ICategory; // ICategory로 변경하여 카테고리 정보 포함
+  category : ICategory;
 }
 
 // 카테고리 데이터 인터페이스 정의

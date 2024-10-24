@@ -14,7 +14,7 @@ const Loader = (Component) => (props) =>
 
 
 const FaQList = Loader(
-  lazy(() => import('src/faq/components/list'))
+  lazy(() => import('src/faq/pages/FaqListPage'))
 );
 
 const FaQAdd = Loader(

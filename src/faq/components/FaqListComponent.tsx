@@ -1,4 +1,6 @@
-import React, { useEffect, useState, useCallback } from 'react';
+// components/FaqListComponent.tsx
+
+import React, { useEffect, useState } from 'react';
 import {
   Box,
   Card,
@@ -15,7 +17,6 @@ import {
   TableContainer,
   TableHead,
   TableRow,
-  Typography,
 } from '@mui/material';
 import { IFaq, ICategory } from '../../types/faq';
 import { getFaqList } from '../../api/faqAPI';
@@ -24,29 +25,24 @@ const FaqListComponent = () => {
   const [faqs, setFaqs] = useState<IFaq[]>([]);
   const [categories, setCategories] = useState<ICategory[]>([]);
   const [filterCategory, setFilterCategory] = useState<string>('전체');
-  const [error, setError] = useState<string | null>(null);
-
-  const fetchData = useCallback(async () => {
-    try {
-      // FAQ 데이터 가져오기
-      const faqData = await getFaqList();
-      setFaqs(faqData);
-
-      // 고유한 카테고리 목록 추출
-      const uniqueCategories = Array.from(
-        new Map(faqData.map((faq) => [faq.category.cno, faq.category])).values()
-      );
-      setCategories(uniqueCategories);
-      setError(null); // 성공 시 에러 상태 초기화
-    } catch (error) {
-      console.error('Error fetching data:', error);
-      setError('데이터를 불러오는 데 실패했습니다. 다시 시도해 주세요.');
-    }
-  }, []);
 
   useEffect(() => {
+    const fetchData = async () => {
+      try {
+        // FAQ 데이터와 카테고리 데이터를 함께 가져오기
+        const faqData = await getFaqList();
+        setFaqs(faqData);
+        // 카테고리 데이터 추출 및 설정
+        const categoryData = Array.from(
+          new Set(faqData.map((faq) => faq.category))
+        );
+        setCategories(categoryData);
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    };
     fetchData();
-  }, [fetchData]);
+  }, []);
 
   // 카테고리 필터 옵션 설정
   const categoryOptions = [
@@ -60,35 +56,10 @@ const FaqListComponent = () => {
   };
 
   // FAQ 필터링 함수
-  const filteredFaqs = filterCategory === '전체'
-    ? faqs
-    : faqs.filter((faq) => faq.category.cno.toString() === filterCategory);
-
-  // 렌더링 함수: FAQ 테이블
-  const renderTableRows = () => {
-    if (filteredFaqs.length === 0) {
-      return (
-        <TableRow>
-          <TableCell colSpan={6} align="center">
-            No FAQs available.
-          </TableCell>
-        </TableRow>
-      );
-    }
-
-    return filteredFaqs.map((faq) => (
-      <TableRow hover key={faq.fno}>
-        <TableCell align="center">{faq.fno}</TableCell>
-        <TableCell align="left">{faq.question}</TableCell>
-        <TableCell align="left">{faq.answer}</TableCell>
-        <TableCell align="center">{faq.del_flag ? 'Yes' : 'No'}</TableCell>
-        <TableCell align="center">{faq.view_cnt}</TableCell>
-        <TableCell align="center">
-          {faq.category?.cname || 'Unknown'}
-        </TableCell>
-      </TableRow>
-    ));
-  };
+  const filteredFaqs = faqs.filter((faq) => {
+    if (filterCategory === '전체') return true;
+    return faq.cno.toString() === filterCategory;
+  });
 
   return (
     <Card>
@@ -116,12 +87,6 @@ const FaqListComponent = () => {
 
       <Divider />
 
-      {error && (
-        <Typography color="error" align="center" variant="body1" style={{ marginTop: '10px' }}>
-          {error}
-        </Typography>
-      )}
-
       <TableContainer>
         <Table>
           <TableHead style={{ backgroundColor: '#FCFBF0' }}>
@@ -136,7 +101,26 @@ const FaqListComponent = () => {
           </TableHead>
 
           <TableBody>
-            {renderTableRows()}
+            {filteredFaqs.length > 0 ? (
+              filteredFaqs.map((faq) => (
+                <TableRow hover key={faq.fno}>
+                  <TableCell align="center">{faq.fno}</TableCell>
+                  <TableCell align="left">{faq.question}</TableCell>
+                  <TableCell align="left">{faq.answer}</TableCell>
+                  <TableCell align="center">{faq.del_flag ? 'Yes' : 'No'}</TableCell>
+                  <TableCell align="center">{faq.view_cnt}</TableCell>
+                  <TableCell align="center">
+                    {faq.category?.cname || 'Unknown'}
+                  </TableCell>
+                </TableRow>
+              ))
+            ) : (
+              <TableRow>
+                <TableCell colSpan={6} align="center">
+                  No FAQs available.
+                </TableCell>
+              </TableRow>
+            )}
           </TableBody>
         </Table>
       </TableContainer>
