@@ -5,29 +5,6 @@ import { useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
 
 
-// Q&A 데이터 타입 정의
-interface IAnswer {
-  ano: number;
-  title: string;
-  writer: string;
-  question: string;
-  created_date: Date;
-  updated_date?: Date;
-  status: '답변대기' | '답변완료';
-  answer: string;
-}
-
-const initState: IAnswer = {
-  ano: 0,
-  title: '',
-  writer: '',
-  question: '',
-  created_date: new Date(),
-  updated_date: undefined,
-  status: '답변대기',
-  answer: ''
-};
-
 
 function QnaReadComponent() {
   const [qna, setQna] = useState<IAnswer>({ ...initState });
