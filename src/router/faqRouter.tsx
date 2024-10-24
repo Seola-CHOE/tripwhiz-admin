@@ -3,6 +3,7 @@ import SuspenseLoader from '../components/SuspenseLoader';
 import SidebarLayout from '../layouts/SidebarLayout';
 import { Navigate } from 'react-router-dom';
 import FaqListPage from '../faq/pages/FaqListPage';
+import FaqModifyPage from '../faq/pages/FaqModifyPage';
 
 const Loader = (Component) => (props) =>
   (
@@ -37,7 +38,6 @@ const faqRouter = {
     {
         path: 'list',
         element: <FaqListPage/>
-        // element: <FaQList/>
     },
     {
         path: 'add',
@@ -45,7 +45,7 @@ const faqRouter = {
     },
     {
         path: 'modify',
-        element: <FaQModi/>
+        element: <FaqModifyPage/>
     }
   ]
 }
